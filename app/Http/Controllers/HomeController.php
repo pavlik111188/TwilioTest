@@ -23,14 +23,8 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function setEmail(Request $request) {
-
-        \Session::put('emailN', $request->emailN);
-        return redirect('/register');
-    }
     public function index()
     {
-        //Twilio::message('+18085551212', 'Pink Elephants and Happy Rainbows');
         return view('welcome');
 
     }
@@ -79,14 +73,11 @@ class HomeController extends Controller
         }
     }
 
-
     public function checkNumber(Request $request)
     {
-        //return $this->isValidNumber($request->phone);
         $sid = $_ENV['TWILIO_ACCOUNT_SID'];
         $token = $_ENV['TWILIO_AUTH_TOKEN'];
         $client = new \Lookups_Services_Twilio($sid, $token);
-        //$number = $client->phone_numbers->get($number, array("CountryCode" => "US", "Type" => "carrier"));
         try {
             $number = $client->phone_numbers->get($request->phone, array("CountryCode" => "US", "Type" => "carrier"));
             return $number->phone_number;
@@ -99,36 +90,6 @@ class HomeController extends Controller
                 echo "<br />".$number->phone_number. "<button class='btn-warning' onclick='buyNumber(".$number->phone_number.");'>Buy</button>";
             }
         }
-        /*if ($this->isValidNumber($request->phone)) {
-            return $this->isValidNumber($request->phone);
-        } else {
-            return $this->isValidNumber($request->phone);
-        }*/
-        /*$sid = $_ENV['TWILIO_ACCOUNT_SID'];
-        $token = $_ENV['TWILIO_AUTH_TOKEN'];
-        $client = new \Lookups_Services_Twilio($sid, $token);
-        try {
-            $number = $client->phone_numbers->get($request->phone, array("CountryCode" => "US", "Type" => "carrier"));
-            //$number->carrier->type;
-            dd($number);
-            return "Phone number: ". $number->phone_number ."<br /> Type: ".$number->carrier->type . "<br /> Operator: ".$number->carrier->name;
-        }
-        catch (Exception $e) {
-            if($e->getStatus() == 404) {
-                return false;
-            } else {
-                throw $e;
-            }
-        }*/
-        //$number = $client->phone_numbers->get($request->phone, array("CountryCode" => "US", "Type" => "carrier"));
-        //return "Phone number: ". $number->phone_number ."<br /> Type: ".$number->carrier->type . "<br /> Operator: ".$number->carrier->name; // => Sprint Spectrum, L.P.
-    }
-    public function render($request, \Exception $e)
-    {
-        if ($e instanceof \ForbiddenException) {
-            return redirect()->route('home')->withErrors(['error' => $e->getMessage()]);
-        }
 
-        return parent::render($request, $e);
     }
 }
